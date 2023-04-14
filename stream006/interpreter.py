@@ -75,7 +75,7 @@ def handle_yell():
 	try:
 		print(variables[var_name])
 	except:
-		print('unknown variable: %s' % var_name)
+		print(f'unknown variable: {var_name}')
 		quit()
 
 

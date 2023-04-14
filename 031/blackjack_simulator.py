@@ -21,7 +21,7 @@ def simulate(queue, batch_size):
 		]
 
 		# add more decks
-		std_deck = std_deck * num_decks
+		std_deck *= num_decks
 
 		random.shuffle(std_deck)
 
@@ -81,7 +81,7 @@ def simulate(queue, batch_size):
 	win = 0
 	draw = 0
 	lose = 0
-	for i in range(0, batch_size):
+	for i in range(batch_size):
 		# reshuffle cards at shuffle_perc percentage
 		if (float(len(deck)) / (52 * num_decks)) * 100 < shuffle_perc:
 			deck = new_deck()
@@ -112,7 +112,7 @@ queue = multiprocessing.Queue()
 # create n processes
 processes = []
 
-for i in range(0, cpus):
+for _ in range(cpus):
 	process = multiprocessing.Process(target=simulate, args=(queue, batch_size))
 	processes.append(process)
 	process.start()
@@ -128,7 +128,7 @@ win = 0
 draw = 0
 lose = 0
 
-for i in range(0, cpus):
+for _ in range(cpus):
 	results = queue.get()
 	win += results[0]
 	draw += results[1]

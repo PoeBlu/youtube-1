@@ -123,13 +123,10 @@ def select():
 
 def choose(availMoves):
     Canvas.drawBoard()
-    choice = Canvas.chooseMove(len(availMoves))
-
-    return choice
+    return Canvas.chooseMove(len(availMoves))
 
 def randChoose(a):
     Canvas.drawBoard()
     if globVar.numPlayers == 1 or globVar.slow_speed:
         time.sleep(0.5)
-    choice = random.randint(0, 100) % a
-    return choice
+    return random.randint(0, 100) % a

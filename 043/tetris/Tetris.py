@@ -136,8 +136,7 @@ class Piece:
             block[1] += coord[1]
 
     def __iter__(self):
-        for block in self.blocks:
-            yield block
+        yield from self.blocks
 
     def __getitem__(self, key):
         return self.blocks[key]
@@ -167,17 +166,14 @@ class GameCore:
         self.playing = not self.paused and not self.game_over
 
     def player_oversteps_bottom_pieces(self):
-        for coord in self.player.blocks:
-            if coord in self.bottom_pieces:
-                return True
-        return False
+        return any(coord in self.bottom_pieces for coord in self.player.blocks)
 
     def player_oversteps_border(self):
-        for coord in self.player.blocks:
-            if not (STAGE_MARGIN[0] <= coord[0] <= STAGE_WIDTH+STAGE_MARGIN[0]) or \
-               not (coord[1] <= STAGE_HEIGHT+STAGE_MARGIN[1]):
-                return True
-        return False
+        return any(
+            not (STAGE_MARGIN[0] <= coord[0] <= STAGE_WIDTH + STAGE_MARGIN[0])
+            or not (coord[1] <= STAGE_HEIGHT + STAGE_MARGIN[1])
+            for coord in self.player.blocks
+        )
 
     def player_oversteps(self):
         return self.player_oversteps_border() or self.player_oversteps_bottom_pieces()
@@ -240,14 +236,9 @@ class BottomPieces(list):
     def __contains__(self, element):
         if super(BottomPieces, self).__contains__(element):
             return True
-        else:
-            for piece in self:
-                if element in piece:
-                    return True
-        return False
+        return any(element in piece for piece in self)
 
     def check_rows(self):
-        blocks_deleated = 0
         acc = {}
         for piece in self:
             for block in piece:
@@ -255,12 +246,12 @@ class BottomPieces(list):
                     acc[block[1]] = []
                 acc[block[1]].append(block[0])
 
-        for key, value in sorted(acc.items()):
-            if len(value) == STAGE_WIDTH+1:
-                blocks_deleated += self.delete_row(key)
-
-        lines_cleared = blocks_deleated // (STAGE_WIDTH + 1)
-        if lines_cleared:
+        blocks_deleated = sum(
+            self.delete_row(key)
+            for key, value in sorted(acc.items())
+            if len(value) == STAGE_WIDTH + 1
+        )
+        if lines_cleared := blocks_deleated // (STAGE_WIDTH + 1):
             self.game_core.bottom_pieces_call(lines_cleared)
 
     def delete_row(self, row):
@@ -417,14 +408,13 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            
-            if event.type == KEYDOWN:
-                if event.key in (K_PAUSE, K_RETURN, K_p):
-                    if not self.core.game_over:
-                        self.core.set_paused()
-                    else:
-                        self.__init__()
-                
+
+            if event.type == KEYDOWN and event.key in (K_PAUSE, K_RETURN, K_p):
+                if self.core.game_over:
+                    self.__init__()
+
+                else:
+                    self.core.set_paused()
             if self.core.playing:
                 if event.type == KEYDOWN:
                     if event.key == K_UP:

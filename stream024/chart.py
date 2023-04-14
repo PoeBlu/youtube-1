@@ -10,7 +10,7 @@ ROWS = 16
 
 os.system('clear')
 
-data = [random.randint(0, 99) for i in range(COLUMNS)]
+data = [random.randint(0, 99) for _ in range(COLUMNS)]
 minimum = min(data)
 maximum = max(data)
 
@@ -20,7 +20,7 @@ chart = []
 for row in range(ROWS):
     chart.append([])
     chart[row].append(math.ceil((maximum / ROWS) * row))
-    for d in data:
+    for _ in data:
         chart[row].append('   ')
 
 for r_idx, row in enumerate(chart):

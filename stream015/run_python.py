@@ -5,11 +5,7 @@ import sys
 start_num = int(sys.argv[1])
 count = int(sys.argv[2])
 
-list = []
-
-for i in range(0, count):
-    list.append(i * start_num)
-
+list = [i * start_num for i in range(count)]
 sum = 0
 divisible = 0
 

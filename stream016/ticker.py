@@ -14,8 +14,8 @@ for sym in sys.argv[1:]:
     prices[sym.lower()] = { 'price': 0.00, 'delta': 0.00 }
 
 def update_price(sym):
+    template = 'https://api.bittrex.com/api/v1.1/public/getticker?market={}-{}'
     while True:
-        template = 'https://api.bittrex.com/api/v1.1/public/getticker?market={}-{}'
         first_pair = 'usd' if sym == 'btc' else 'btc'
 
         pricing = requests.get(template.format(first_pair, sym)).json()

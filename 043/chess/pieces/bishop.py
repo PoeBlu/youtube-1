@@ -6,10 +6,7 @@ class Bishop(Piece):
         Piece.__init__(self, color, type)
 
     def __str__(self):
-        if(self.color == "W"):
-            return "B"
-        else:
-            return "b"
+        return "B" if (self.color == "W") else "b"
 
     def scan(self):
         availMoves = []
@@ -26,7 +23,7 @@ class Bishop(Piece):
         if self.row > 0:
             if self.col > 0:
                 # scan up and left
-                while (rowCount - 1 > -1 or colCount - 1 > -1) and running and not edgeFound:
+                while (rowCount > 0 or colCount > 0) and running and not edgeFound:
                     rowCount -= 1
                     colCount -= 1
                     if colCount == -1 or rowCount == -1:
@@ -59,7 +56,7 @@ class Bishop(Piece):
 
             if self.col < 7:
                 # scan up and right
-                while (rowCount - 1 > -1 or colCount + 1 < 8) and running and not edgeFound:
+                while (rowCount > 0 or colCount < 7) and running and not edgeFound:
                     rowCount -= 1
                     colCount += 1
                     if colCount == 7 or rowCount == 0:
@@ -93,7 +90,7 @@ class Bishop(Piece):
 
             # scan down and left
             if self.col > 0:
-                while (rowCount + 1 < 8 or colCount - 1 > -1) and running and not edgeFound:
+                while (rowCount < 7 or colCount > 0) and running and not edgeFound:
                     rowCount += 1
                     colCount -= 1
                     if colCount == -1 or rowCount == 8:
@@ -125,7 +122,7 @@ class Bishop(Piece):
 
             # scan down and right
             if self.col < 7:
-                while (rowCount + 1 < 8 or colCount + 1 < 8) and running and not edgeFound:
+                while (rowCount < 7 or colCount < 7) and running and not edgeFound:
                     rowCount += 1
                     colCount += 1
                     if colCount == 8 or rowCount == 8:

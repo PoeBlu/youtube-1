@@ -16,10 +16,7 @@ class Pawn(Piece):
 
     def scan(self):
         # Determine direction
-        if self.color == "W":
-            dn = -1
-        else:
-            dn = 1
+        dn = -1 if self.color == "W" else 1
         availMoves = []
         optionCounter = 1
         blocked = True
@@ -52,7 +49,7 @@ class Pawn(Piece):
         if self.col > 0 and (self.row + (1 * dn)) >= 0 and (self.row + (1 * dn)) <= 7:
             diagColor = board.Grid((self.row + (1 * dn)), (self.col - 1)).piece.color
 
-            if ( diagColor != self.color and diagColor != "none"):
+            if diagColor not in [self.color, "none"]:
                 availMoves.append(board.Grid((self.row + (1 * dn)), (self.col - 1)))
                 board.Grid((self.row + (1 * dn)), (self.col - 1)).des = True
                 board.Grid((self.row + (1 * dn)), (self.col - 1)).option = optionCounter
@@ -62,7 +59,7 @@ class Pawn(Piece):
         if self.col < 7 and (self.row + (1 * dn)) >= 0 and (self.row + (1 * dn)) <= 7:
             diagColor = board.Grid((self.row + (1 * dn)), (self.col + 1)).piece.color
 
-            if ( diagColor != self.color and diagColor != "none"):
+            if diagColor not in [self.color, "none"]:
                 availMoves.append(board.Grid((self.row + (1 * dn)), (self.col + 1)))
                 board.Grid((self.row + (1 * dn)), (self.col + 1)).des = True
                 board.Grid((self.row + (1 * dn)), (self.col + 1)).option = optionCounter

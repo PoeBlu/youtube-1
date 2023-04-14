@@ -30,11 +30,7 @@ def state():
     playing = True
 
     while playing:
-        if (globVar.playerCount % 2) == 0:
-            globVar.player = "W"
-        else:
-            globVar.player = "b"
-
+        globVar.player = "W" if (globVar.playerCount % 2) == 0 else "b"
         Player.turn()
         globVar.playerCount += 1
         # utils.check_king()

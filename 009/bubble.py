@@ -1,7 +1,7 @@
 def sort(arr):
     while True:
         corrected = False
-        for i in range(0, len(arr) - 1):
+        for i in range(len(arr) - 1):
             if arr[i] > arr[i+1]:
                 arr[i], arr[i+1] = arr[i+1], arr[i]
                 corrected = True

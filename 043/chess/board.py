@@ -22,33 +22,26 @@ def populate():
 
     # alternate colors
     for i in range(8):
-        if (i % 2 == 0):
-            place = 0
-            for j in range(8):
-                grid[i][place].pieceStatus = False
+        place = 0
+        for _ in range(8):
+            grid[i][place].pieceStatus = False
+            if (i % 2 == 0):
                 grid[i][place].color = "white"
                 grid[i][place].row = i
                 grid[i][place].col = place
 
                 grid[i][place + 1].pieceStatus = False
                 grid[i][place + 1].color = "black"
-                grid[i][place + 1].row = i
-                grid[i][place + 1].col = (place + 1)
-
-                place += 2
-
-        else:
-            place = 0
-            for k in range(8):
-                grid[i][place].pieceStatus = False
+            else:
                 grid[i][place].color = "black"
                 grid[i][place].row = i
                 grid[i][place].col = place
                 grid[i][place + 1].pieceStatus = False
                 grid[i][place + 1].color = "white"
-                grid[i][place + 1].row = i
-                grid[i][place + 1].col = (place + 1)
-                place += 2
+            grid[i][place + 1].row = i
+            grid[i][place + 1].col = (place + 1)
+
+            place += 2
 
     # Fill board with pieces
 

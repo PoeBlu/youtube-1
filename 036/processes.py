@@ -3,7 +3,7 @@ import os
 import math
 
 def calc():
-	for i in range(0, 70000000):
+	for i in range(70000000):
 		math.sqrt(i)
 
 processes = []

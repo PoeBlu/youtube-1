@@ -4,10 +4,10 @@ import random
 master=Tk()
 c=Canvas(master,width=600,height=480)
 c.pack()
-for x in range(0,24):
+for x in range(24):
 	c.create_rectangle(0,20*x,20,20*(x+1),fill="green")
 	c.create_rectangle(580,20*x,600,20*(x+1),fill="green")
-for x in range(0,30):
+for x in range(30):
 	c.create_rectangle(20*x,0,20*(x+1),20,fill="green")
 	c.create_rectangle(20*x,460,20*(x+1),480,fill="green")
 cobra=[[1,10]]
@@ -32,9 +32,10 @@ def anda():
 		c.delete(gomo)
 	for gomo in cobra:
 		c.r.append(c.create_rectangle(20*(gomo[0]),20*(gomo[1]),20*(gomo[0]+1),20*(gomo[1]+1),fill="blue"))
-	vivo=True
-	for x in range(1,len(cobra)):
-		if (cobra[0][0]==cobra[x][0])and(cobra[0][1]==cobra[x][1]):vivo=False
+	vivo = not any(
+		(cobra[0][0] == cobra[x][0]) and (cobra[0][1] == cobra[x][1])
+		for x in range(1, len(cobra))
+	)
 	if(cobra[0][0]>0)and(cobra[0][1]>0)and(cobra[0][0]<29)and(cobra[0][1]<23)and(vivo):
 		t=Timer(.3,anda)
 		t.start()

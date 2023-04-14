@@ -37,19 +37,14 @@ class Square:
             print(self.piece, end="")
             if self.piece.selected:
                 print("^",end="")
-            else:
-                if self.piece.color == "W":
-                    print("'", end="")
-                elif self.piece.color == "b":
-                    print(".", end="")
+            elif self.piece.color == "W":
+                print("'", end="")
+            elif self.piece.color == "b":
+                print(".", end="")
 
-        else:
-            if self.color == "black":
-                if platform.system() == "Windows":
-                    return a_block
-                else:
-                    return u_block
-            elif self.color == "white":
-                return "  "
+        elif self.color == "black":
+            return a_block if platform.system() == "Windows" else u_block
+        elif self.color == "white":
+            return "  "
 
         return ""

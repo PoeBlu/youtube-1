@@ -8,7 +8,7 @@ multi_line = """line1""" \
 
 # substrings
 name = 'engineer man'
-first_name = name[0:8]
+first_name = name[:8]
 
 # integer
 num1 = 6

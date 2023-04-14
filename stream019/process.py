@@ -7,18 +7,16 @@ data = open('data.csv')
 reader = csv.DictReader(data)
 
 def output_json():
-    contents = json.dumps([row for row in reader], indent=4)
+    contents = json.dumps(list(reader), indent=4)
     with open('data.json', 'w') as file:
         file.write(contents)
 
 def output_xml():
-    xml = ['<?xml version="1.0" encoding="UTF-8"?>']
+    xml = ['<?xml version="1.0" encoding="UTF-8"?>', '<banks>']
 
-    xml.append('<banks>')
     for row in reader:
         xml.append('<bank>')
-        for k, v in row.items():
-            xml.append('    <{}>{}</{}>'.format(k, v, k))
+        xml.extend(f'    <{k}>{v}</{k}>' for k, v in row.items())
         xml.append('</bank>')
     xml.append('<banks>')
 
@@ -26,12 +24,8 @@ def output_xml():
         file.write('\n'.join(xml))
 
 def total_deposits():
-    total = 0
-
-    for row in reader:
-        total += int(row['DEPSUM'].replace(',', ''))
-
-    print('total: ${}'.format(total))
+    total = sum(int(row['DEPSUM'].replace(',', '')) for row in reader)
+    print(f'total: ${total}')
 
 def bank_deposits():
     deposits = {}
@@ -41,14 +35,7 @@ def bank_deposits():
             deposits[row['NAMEFULL']] = 0
         deposits[row['NAMEFULL']] += int(row['DEPSUM'].replace(',', ''))
 
-    deplist = []
-
-    for k, v in deposits.items():
-        deplist.append({
-            'name': k,
-            'deposits': v
-        })
-
+    deplist = [{'name': k, 'deposits': v} for k, v in deposits.items()]
     deplist.sort(key=lambda k: k['deposits'])
 
     pprint(deplist)
@@ -66,9 +53,9 @@ except:
 
 if choice == 1:
     output_json()
-if choice == 2:
+elif choice == 2:
     output_xml()
-if choice == 3:
+elif choice == 3:
     total_deposits()
-if choice == 4:
+elif choice == 4:
     bank_deposits()

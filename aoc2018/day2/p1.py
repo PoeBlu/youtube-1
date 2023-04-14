@@ -10,11 +10,11 @@ for string in inputs:
             d[letter] += 1
         else:
             d[letter] = 1
-    for k, v in d.items():
+    for v in d.values():
         if v == 2:
             twice += 1
             break
-    for k, v in d.items():
+    for v in d.values():
         if v == 3:
             thrice += 1
             break
