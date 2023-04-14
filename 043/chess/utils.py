@@ -14,34 +14,36 @@ import random
 import os
 
 def check_pawn(pc):
-    if (pc.type == "pawn" and (globVar.player == "W" and
-    pc.row == 0) or (globVar.player == "b" and pc.row == 7)):
-        if ((globVar.numPlayers == 1 and globVar.player == "W")
-        or globVar.numPlayers == 2):
-            choice = Canvas.pawn_to_new()
-        else:
-            choice = random.randint(1, 4)
+    if (pc.type != "pawn" or globVar.player != "W" or pc.row != 0) and (
+        globVar.player != "b" or pc.row != 7
+    ):
+        return
+    if ((globVar.numPlayers == 1 and globVar.player == "W")
+    or globVar.numPlayers == 2):
+        choice = Canvas.pawn_to_new()
+    else:
+        choice = random.randint(1, 4)
 
-        color = pc.color
-        label = pc.label
-        row = pc.row
-        col = pc.col
+    color = pc.color
+    label = pc.label
+    row = pc.row
+    col = pc.col
 
-        if choice == 1:
-            pc = pieces.Rook(color, "rook")
-        elif choice == 2:
-            pc = pieces.Knight(color, "knight")
-        elif choice == 3:
-            pc = pieces.Bishop(color, "bishop")
-        elif choice == 4:
-            pc = pieces.Queen(color, "queen")
+    if choice == 1:
+        pc = pieces.Rook(color, "rook")
+    elif choice == 2:
+        pc = pieces.Knight(color, "knight")
+    elif choice == 3:
+        pc = pieces.Bishop(color, "bishop")
+    elif choice == 4:
+        pc = pieces.Queen(color, "queen")
 
-        pc.label = label
-        pc.row = row
-        pc.col = col
+    pc.label = label
+    pc.row = row
+    pc.col = col
 
-        updatePieces(pc)
-        board.uGrid(pc)
+    updatePieces(pc)
+    board.uGrid(pc)
 
 def clearAllOptions():
     for i in range(8):
@@ -260,36 +262,32 @@ def findIndex(label, c):
 
 def find_r_Index(label, c):
     i = 0
-    if c == "W":
-        while True:
+    while True:
+        if c == "W":
             if globVar.r_w_pieces[i].label == label:
                 return i
             else:
                 i += 1
-    else:
-        while True:
-            if globVar.r_b_pieces[i].label == label:
-                return i
-            else:
-                i += 1
+        elif globVar.r_b_pieces[i].label == label:
+            return i
+        else:
+            i += 1
 
 def findKingIndex(c):
     i = 0
-    if c == "W":
-        while True:
+    while True:
+        if c == "W":
             if globVar.w_pieces[i].type == "king":
                 return i
             else:
                 i += 1
-    else:
-        while True:
-            if globVar.b_pieces[i].type == "king":
-                return i
-            else:
-                i += 1
+        elif globVar.b_pieces[i].type == "king":
+            return i
+        else:
+            i += 1
 
 def deletePiece(tpc, fpc):
-    if (fpc.color != tpc.color and tpc.color != "none"):
+    if fpc.color != tpc.color != "none":
         globVar.removed = True
         globVar.removed_label = tpc.label
         globVar.removed_color = tpc.color
@@ -313,27 +311,28 @@ def deletePiece(tpc, fpc):
     remove_from_board(tpc.label, tpc.color)
 
 def un_deletePiece(fpc):
-    if globVar.removed:
-        index = find_r_Index(globVar.removed_label, globVar.removed_color)
-        if fpc.color == "W":
-            tmp_pc = copy.deepcopy(globVar.r_b_pieces[index])
-            globVar.b_pieces.append(tmp_pc)
-            globVar.r_b_pieces.pop(index)
-            globVar.b_NumPieces += 1
-            globVar.r_b_NumPieces -= 1
-            if tmp_pc.type == "king":
-                globVar.no_b_king = False
-        else:
-            tmp_pc = copy.deepcopy(globVar.r_w_pieces[index])
-            globVar.w_pieces.append(tmp_pc)
-            globVar.r_w_pieces.pop(index)
-            globVar.w_NumPieces += 1
-            globVar.r_w_NumPieces -= 1
-            if tmp_pc.type == "king":
-                globVar.no_w_king = False
+    if not globVar.removed:
+        return
+    index = find_r_Index(globVar.removed_label, globVar.removed_color)
+    if fpc.color == "W":
+        tmp_pc = copy.deepcopy(globVar.r_b_pieces[index])
+        globVar.b_pieces.append(tmp_pc)
+        globVar.r_b_pieces.pop(index)
+        globVar.b_NumPieces += 1
+        globVar.r_b_NumPieces -= 1
+        if tmp_pc.type == "king":
+            globVar.no_b_king = False
+    else:
+        tmp_pc = copy.deepcopy(globVar.r_w_pieces[index])
+        globVar.w_pieces.append(tmp_pc)
+        globVar.r_w_pieces.pop(index)
+        globVar.w_NumPieces += 1
+        globVar.r_w_NumPieces -= 1
+        if tmp_pc.type == "king":
+            globVar.no_w_king = False
 
-        # put piece back on board
-        board.uGrid(tmp_pc)
+    # put piece back on board
+    board.uGrid(tmp_pc)
 
 def remove_from_board(label, color):
     for i in range(8):
@@ -352,9 +351,7 @@ def r_c(x):
     if x == 'c': # col
         choice = Canvas.chooseCol()
         choice = choice.upper()
-        choice = ord(choice)
-        choice -= 65
-
+        choice = ord(choice) - 65
     else: # row
         choice = Canvas.chooseRow()
         choice = (8 - choice)
@@ -363,35 +360,29 @@ def r_c(x):
 
 def writeSave():
     startData = "True"
-    save = open("chess.save","w")
+    with open("chess.save","w") as save:
+        save.write(startData)
+        save.write("\n")
 
-    save.write(startData)
-    save.write("\n")
+        # write board
+        writeBoard(save)
+        # write global variables
+        writeGlobal(save)
+        # write pieces arrays
+        writePiecesArrays(save)
+        # write deleted pieces arrays
+        write_r_PiecesArrays(save)
+        # write potenial moves
+        write_p_moves(save)
+        # write firstPawns
+        write_firstPawns(save)
 
-    # write board
-    writeBoard(save)
-    # write global variables
-    writeGlobal(save)
-    # write pieces arrays
-    writePiecesArrays(save)
-    # write deleted pieces arrays
-    write_r_PiecesArrays(save)
-    # write potenial moves
-    write_p_moves(save)
-    # write firstPawns
-    write_firstPawns(save)
-
-    save.write("\n")
-    save.close()
+        save.write("\n")
 
 def readSave():
     save = open("chess.save", "r")
     startData = save.readline().strip('\n')
-    if startData == "True":
-        st = True
-    else:
-        st = False
-
+    st = startData == "True"
     if st:
         # read board
         readBoard(save)
@@ -415,14 +406,12 @@ def readBoard(save):
     k = 0
     sqrArray = save.readline().split(',')
 
+    selected = False
     for i in range(8):
         for j in range(8):
 
             ps = sqrArray[k]
-            if ps == "True":
-                pieceStatus = True
-            else:
-                pieceStatus = False
+            pieceStatus = ps == "True"
             k += 1
             board.Grid(i,j).color = sqrArray[k]
             k += 1
@@ -439,7 +428,6 @@ def readBoard(save):
             k += 1
             color = sqrArray[k]
             k += 1
-            selected = False
             k += 1
             label = int(sqrArray[k])
             k += 1
@@ -472,102 +460,62 @@ def readGlobal(save):
     w_check = save.readline().strip('\n')
     b_check = save.readline().strip('\n')
     removed = save.readline().strip('\n')
-    if w_check == "True":
-        globVar.w_check = True
-    else:
-        globVar.w_check = False
+    globVar.w_check = w_check == "True"
     if b_check == "True":
         globVar.b_check = True
     else:
         globVar.w_check = False
-    if removed == "True":
-        globVar.removed = True
-    else:
-        globVar.removed = False
+    globVar.removed = removed == "True"
     globVar.removed_label = int(save.readline().strip('\n'))
     globVar.removed_color = save.readline().strip('\n')
     globVar.last_col = int(save.readline().strip('\n'))
     globVar.last_row = int(save.readline().strip('\n'))
     scanning = save.readline().strip('\n')
-    if scanning == "True":
-        globVar.scanning = True
-    else:
-        globVar.scanning = False
+    globVar.scanning = scanning == "True"
     globVar.r_avail_Num = int(save.readline().strip('\n'))
     globVar.p_w_Num = int(save.readline().strip('\n'))
     globVar.p_b_Num = int(save.readline().strip('\n'))
     m_f_ps = save.readline().strip('\n')
-    if m_f_ps == "True":
-        globVar.m_f_ps = True
-    else:
-        globVar.m_f_ps = False
+    globVar.m_f_ps = m_f_ps == "True"
     globVar.m_f_p_color = save.readline().strip('\n')
     globVar.m_f_p_type = save.readline().strip('\n')
     globVar.m_f_p_label = int(save.readline().strip('\n'))
     globVar.m_f_p_row = int(save.readline().strip('\n'))
     globVar.m_f_p_col = int(save.readline().strip('\n'))
     m_t_ps = save.readline().strip('\n')
-    if m_t_ps == "True":
-        globVar.m_t_ps = True
-    else:
-        globVar.m_t_ps = False
+    globVar.m_t_ps = m_t_ps == "True"
     globVar.m_t_p_color = save.readline().strip('\n')
     globVar.m_t_p_type = save.readline().strip('\n')
     globVar.m_t_p_label = int(save.readline().strip('\n'))
     globVar.m_t_p_row = int(save.readline().strip('\n'))
     globVar.m_t_p_col = int(save.readline().strip('\n'))
     m_fm = save.readline().strip('\n')
-    if m_fm == "True":
-        globVar.m_fm = True
-    else:
-        globVar.m_fm = False
-
+    globVar.m_fm = m_fm == "True"
     u_m_f_ps = save.readline().strip('\n')
-    if u_m_f_ps == "True":
-        globVar.u_m_f_ps = True
-    else:
-        globVar.u_m_f_ps = False
+    globVar.u_m_f_ps = u_m_f_ps == "True"
     globVar.u_m_f_p_color = save.readline().strip('\n')
     globVar.u_m_f_p_type = save.readline().strip('\n')
     globVar.u_m_f_p_label = int(save.readline().strip('\n'))
     globVar.u_m_f_p_row = int(save.readline().strip('\n'))
     globVar.u_m_f_p_col = int(save.readline().strip('\n'))
     u_m_t_ps = save.readline().strip('\n')
-    if u_m_t_ps == "True":
-        globVar.u_m_t_ps = True
-    else:
-        globVar.u_m_t_ps = False
+    globVar.u_m_t_ps = u_m_t_ps == "True"
     globVar.u_m_t_p_color = save.readline().strip('\n')
     globVar.u_m_t_p_type = save.readline().strip('\n')
     globVar.u_m_t_p_label = int(save.readline().strip('\n'))
     globVar.u_m_t_p_row = int(save.readline().strip('\n'))
     globVar.u_m_t_p_col = int(save.readline().strip('\n'))
     u_m_fm = save.readline().strip('\n')
-    if u_m_fm == "True":
-        globVar.u_m_fm = True
-    else:
-        globVar.u_m_fm = False
+    globVar.u_m_fm = u_m_fm == "True"
     no_b_king = save.readline().strip('\n')
-    if no_b_king == "True":
-        globVar.no_b_king = True
-    else:
-        globVar.no_b_king = False
+    globVar.no_b_king = no_b_king == "True"
     no_w_king = save.readline().strip('\n')
-    if no_w_king == "True":
-        globVar.no_w_king = True
-    else:
-        globVar.no_w_king = False
+    globVar.no_w_king = no_w_king == "True"
     globVar.firstPawnsNum = int(save.readline().strip('\n'))
     checkmate = save.readline().strip('\n')
-    if checkmate == "True":
-        globVar.checkmate = True
-    else:
-        globVar.checkmate = False
+    globVar.checkmate = checkmate == "True"
     slow_speed = save.readline().strip('\n')
-    if slow_speed == "True":
-        globVar.slow_speed = True
-    else:
-        globVar.slow_speed = False
+    globVar.slow_speed = slow_speed == "True"
 
 def readPiecesArrays(save, c):
     wp_array = save.readline().split(',')
@@ -578,14 +526,11 @@ def readPiecesArrays(save, c):
     else:
         globVar.b_pieces = []
         n = globVar.b_NumPieces
-    for i in range(n):
+    for _ in range(n):
         color = wp_array[k]
         k += 1
         selected = wp_array[k]
-        if selected == "True":
-            sl = True
-        else:
-            sl = False
+        sl = selected == "True"
         k += 1
         type = wp_array[k]
         k += 1
@@ -626,14 +571,11 @@ def read_firstPawns(save):
     k = 0
     n = globVar.firstPawnsNum
 
-    for i in range(n):
+    for _ in range(n):
         color = p_array[k]
         k += 1
         selected = p_array[k]
-        if selected == "True":
-            sl = True
-        else:
-            sl = False
+        sl = selected == "True"
         k += 1
         type = p_array[k]
         k += 1
@@ -644,10 +586,7 @@ def read_firstPawns(save):
         col = int(p_array[k])
         k += 1
         fm = p_array[k]
-        if fm == "True":
-            firstMove = True
-        else:
-            firstMove = False
+        firstMove = fm == "True"
         k += 1
 
         pc = pieces.Pawn(color, type)
@@ -672,7 +611,7 @@ def read_r_avail(save):
     r_avail_array = save.readline().split(',')
     k = 0
     n = globVar.r_avail_Num
-    for i in range(n):
+    for _ in range(n):
         ps = r_avail_array[k]
         k += 1
         sqrColor = r_avail_array[k]
@@ -711,14 +650,11 @@ def read_r_PiecesArrays(save, c):
     else:
         globVar.r_b_pieces = []
         n = globVar.r_b_NumPieces
-    for i in range(n):
+    for _ in range(n):
         color = wp_array[k]
         k += 1
         selected = wp_array[k]
-        if selected == "True":
-            sl = True
-        else:
-            sl = False
+        sl = selected == "True"
         k += 1
         type = wp_array[k]
         k += 1
@@ -746,7 +682,7 @@ def read_p_moves(save):
     p_w_array = save.readline().split(',')
     k = 0
     n = globVar.p_w_Num
-    for i in range(n):
+    for _ in range(n):
         ps = p_w_array[k]
         k += 1
         sqrColor = p_w_array[k]
@@ -780,7 +716,7 @@ def read_p_moves(save):
     p_b_array = save.readline().split(',')
     k = 0
     n = globVar.p_b_Num
-    for i in range(n):
+    for _ in range(n):
         ps = p_b_array[k]
         k += 1
         sqrColor = p_b_array[k]
@@ -1116,10 +1052,7 @@ def clearMovesHistory():
         os.remove("moves.txt")
 
 def hasMoves(availMoves):
-    if len(availMoves) > 0:
-        return True
-    else:
-        return False
+    return len(availMoves) > 0
 
 def recordMove(fromSqr, toSqr):
     # record fromSqr

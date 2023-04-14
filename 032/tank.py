@@ -9,7 +9,7 @@ class Tank(object):
 		if self.alive:
 			return "%s (%i armor, %i shells)" % (self.name, self.armor, self.ammo)
 		else:
-			return "%s (DEAD)" % self.name
+			return f"{self.name} (DEAD)"
 
 	def fire_at(self, enemy):
 		if self.ammo >=1:

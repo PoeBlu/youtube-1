@@ -8,8 +8,7 @@ class Piece:
         self.col = -1
 
     def scan(self):
-        availMoves = []
-        return availMoves
+        return []
 
     # def __str__(self):
     #     if self.des:

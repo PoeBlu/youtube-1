@@ -6,7 +6,7 @@ moves=[[' ',' ',' '],[' ',' ',' '],[' ',' ',' ']]
 
 def ispace():
 	for x in range(11):
-		if x==3 or x==7:
+		if x in [3, 7]:
 			print('|',end='')
 
 		else:
@@ -28,7 +28,7 @@ def inpspace(r,c):
 
 def iline():
 	for x in range(11):
-		if x==3 or x==7:
+		if x in [3, 7]:
 			print('|',end='')
 
 		else:

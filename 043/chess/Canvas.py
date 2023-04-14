@@ -20,24 +20,24 @@ def drawBoard():
     letterLabel = 'A'
 
     print("\n     ", end = "")
-    for i in range(8):
-        print(letterLabel + " ", end = "")
+    for _ in range(8):
+        print(f"{letterLabel} ", end = "")
         letterLabel = chr(ord(letterLabel) + 1)
 
     print("\n    ",end="")
-    for i in range(18):
+    for _ in range(18):
         print("_",end="")
 
     print("\n", end = "")
     for i in range(8):
-        print(' {}  |'.format(numLabel), end = "")
+        print(f' {numLabel}  |', end = "")
         for j in range(8):
             print(board.Grid(i, j), end = "")
         print("|",end="")
         numLabel -= 1
         print("\n", end = "")
     print("    ",end="")
-    for i in range(18):
+    for _ in range(18):
         print("¯",end="")
     print("\n",end="")
 
@@ -45,7 +45,7 @@ def drawBoard():
 
 def nowPlaying():
     print(" ",end="")
-    for i in range(23):
+    for _ in range(23):
         print("-",end="")
     if( (globVar.w_check and globVar.player == "W") or
     (globVar.b_check and globVar.player == "b")):
@@ -55,7 +55,7 @@ def nowPlaying():
     else:
         print("\n |    NOW PLAYING: ", globVar.player, " |")
     print(" ",end="")
-    for i in range(23):
+    for _ in range(23):
         print("-",end="")
 
 def pawn_to_new():
@@ -69,12 +69,16 @@ def pawn_to_new():
         except ValueError:
             pawnError()
             continue
-        if (choice == "" or len(choice) > 1 or not choice.isdigit()
-        or int(choice) < 1 or int(choice) > 4):
-            pawnError()
-            continue
-        else:
+        if (
+            choice != ""
+            and len(choice) <= 1
+            and choice.isdigit()
+            and int(choice) >= 1
+            and int(choice) <= 4
+        ):
             break
+        pawnError()
+        continue
     return int(choice)
 
 def remaining():
@@ -93,15 +97,21 @@ def remaining():
 
     print(" ",end="")
     print("       REMAINING:\n ", end="")
-    for i in range(23):
+    for _ in range(23):
         print("_",end="")
     print("\n   White:   |   Black:")
-    print("  {}P'  {}R'  |  {}p.  {}r.".format(w_pawn_count, w_rook_count, b_pawn_count, b_rook_count))
-    print("  {}N'  {}B'  |  {}n.  {}b.".format(w_knight_count, w_bishop_count, b_knight_count, b_bishop_count))
-    print("  {}Q'  {}K'  |  {}q.  {}k.".format(w_queen_count, w_king_count, b_queen_count, b_king_count))
+    print(
+        f"  {w_pawn_count}P'  {w_rook_count}R'  |  {b_pawn_count}p.  {b_rook_count}r."
+    )
+    print(
+        f"  {w_knight_count}N'  {w_bishop_count}B'  |  {b_knight_count}n.  {b_bishop_count}b."
+    )
+    print(
+        f"  {w_queen_count}Q'  {w_king_count}K'  |  {b_queen_count}q.  {b_king_count}k."
+    )
 
     print(" ",end="")
-    for i in range(23):
+    for _ in range(23):
         print("¯",end="")
     print("\n")
 
@@ -118,14 +128,12 @@ def startScreen():
             input("")
             continue
 
-        if (not n.isdigit()) or (int(n) < 0) or (int(n) > 2):
-            print("\n Please choose an option.")
-            print("\n Press Enter to continue.")
-            input("")
-            continue
-        else:
+        if n.isdigit() and int(n) >= 0 and int(n) <= 2:
             break
 
+        print("\n Please choose an option.")
+        print("\n Press Enter to continue.")
+        input("")
     globVar.numPlayers = int(n)
 
     if globVar.numPlayers < 2:
@@ -153,18 +161,13 @@ def speedMenu():
             input("")
             continue
 
-        if (not n.isdigit()) or (int(n) < 1) or (int(n) > 2):
-            print("\n Please choose an option.")
-            print("\n Press Enter to continue.")
-            input("")
-            continue
-        else:
+        if n.isdigit() and int(n) >= 1 and int(n) <= 2:
             break
 
-    if int(n) == 1:
-        globVar.slow_speed = True
-    else:
-        globVar.slow_speed = False
+        print("\n Please choose an option.")
+        print("\n Press Enter to continue.")
+        input("")
+    globVar.slow_speed = int(n) == 1
 
 def chooseAvailableMessage():
     errorSeparator()
@@ -208,7 +211,7 @@ def rowError():
 
 def errorSeparator():
     print("\n ",end="")
-    for i in range(43):
+    for _ in range(43):
         print("-",end="")
 
 def clear():
@@ -229,12 +232,15 @@ def chooseCol():
         except ValueError:
             colError()
             continue
-        if (choice == "" or len(choice) > 1 or
-        ord(choice.upper()) < ord('A') or ord(choice.upper()) > ord('H')):
-            colError()
-            continue
-        else:
+        if (
+            choice != ""
+            and len(choice) <= 1
+            and ord(choice.upper()) >= ord('A')
+            and ord(choice.upper()) <= ord('H')
+        ):
             break
+        colError()
+        continue
     return choice
 
 def chooseRow():
@@ -306,16 +312,12 @@ def quit():
 
 def yesNo():
     y = input("(y/n): ")
-    if (y.upper() == "Y" or y.upper() == "YES"):
-        return True
-    else:
-        return False
+    return y.upper() in ["Y", "YES"]
 
 def loadSave():
     clear()
     print("\n Save detected. Load previous game? ", end="")
-    y = yesNo()
-    if y:
+    if y := yesNo():
         board.populate()
         utils.readSave()
     else:

@@ -10,7 +10,7 @@ print('Note: percentages are floored to remove the decimal places.')
 win = 0
 loss = 0
 
-for i in range(100000):
+for _ in range(100000):
 	doors = [
 		{'ID':1,'prize':'','selected':0,'open':0},
 		{'ID':2,'prize':'','selected':0,'open':0},
@@ -58,5 +58,5 @@ for i in range(100000):
 p_win = m.floor((win/100000)*100)
 p_loss = m.floor((loss/100000)*100)
 
-print('WINS: ' + str(p_win) + '%')
-print('LOSS: ' + str(p_loss) + '%')
+print(f'WINS: {str(p_win)}%')
+print(f'LOSS: {str(p_loss)}%')

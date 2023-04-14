@@ -42,15 +42,11 @@ def freeze(args=0):
 	stop.config(state = DISABLED)
 	# To get new scramble
 	scramble.config(text = scrambler333.get_WCA_scramble())
-	# Save new time to file
-	times_file = open('times.txt', 'a+')
-	times_file.write(timed + '\n')
-	times_file.close()
-	# Re-read the file to update stats
-	times_file = open('times.txt', 'r+')
-	times_list = times_file.readlines()
-	count = len(times_list)
-	times_file.close()
+	with open('times.txt', 'a+') as times_file:
+		times_file.write(timed + '\n')
+	with open('times.txt', 'r+') as times_file:
+		times_list = times_file.readlines()
+		count = len(times_list)
 	# Updates No. of Solves and Last 12 Solves after new solve
 	i = 1
 	saved_times_str = ''
@@ -60,16 +56,16 @@ def freeze(args=0):
 				saved_times_str = saved_times_str + times_list[count - i].strip()
 				break
 			saved_times_str = saved_times_str + times_list[count - i].strip() + ', '
-			i = i + 1
+			i += 1
 	else:
 		while (i < 13):
 			if (i == 12):
 				saved_times_str = saved_times_str + times_list[count - i].strip()
 				break
 			saved_times_str = saved_times_str + times_list[count - i].strip() + ', '
-			i = i + 1
-	times_count.config(text='No. of Solves: ' + str(count))
-	saved_times.config(text='Last 12 Solves: ' + saved_times_str)
+			i += 1
+	times_count.config(text=f'No. of Solves: {count}')
+	saved_times.config(text=f'Last 12 Solves: {saved_times_str}')
 	# Updates Average of 5 after new solve
 	avg5 = ''
 	avg5_flo = 0
@@ -81,23 +77,23 @@ def freeze(args=0):
 		p = 0
 		while (p < 5):
 			times_list_5_flo[p] = float(times_list_5[p].strip())
-			p = p + 1
+			p += 1
 		min_5 = min(times_list_5_flo)
 		max_5 = max(times_list_5_flo)
 		p = 0
 		while (p < 5):
 			if (times_list_5_flo[p] == max_5 and max_c == 0):
-				p = p + 1
+				p += 1
 				max_c = 1
 				continue
 			if (times_list_5_flo[p] == min_5 and min_c == 0):
-				p = p + 1
+				p += 1
 				min_c = 1
 				continue
 			avg5_flo = avg5_flo + (times_list_5_flo[p] / 3)
-			p = p + 1
+			p += 1
 		avg5 = '%.2f' % (avg5_flo)
-	ao5.config(text = 'Average of 5: ' + avg5)
+	ao5.config(text=f'Average of 5: {avg5}')
 	# Updates Average of 12 after new solve
 	avg12 = ''
 	avg12_flo = 0
@@ -109,31 +105,28 @@ def freeze(args=0):
 		p = 0
 		while (p < 12):
 			times_list_12_flo[p] = float(times_list_12[p].strip())
-			p = p + 1
+			p += 1
 		min_12 = min(times_list_12_flo)
 		max_12 = max(times_list_12_flo)
 		p = 0
 		while (p < 12):
 			if (times_list_12_flo[p] == max_12 and max_c12 == 0):
-				p = p + 1
+				p += 1
 				max_c12 = 1
 				continue
 			if (times_list_12_flo[p] == min_12 and min_c12 == 0):
-				p = p + 1
+				p += 1
 				min_c12 = 1
 				continue
 			avg12_flo = avg12_flo + (times_list_12_flo[p] / 10)
-			p = p + 1
+			p += 1
 		avg12 = '%.2f' % (avg12_flo)
-	ao12.config(text='Average of 12: ' + avg12)
-	# Updates Total Mean after new solve
-	k = 0
+	ao12.config(text=f'Average of 12: {avg12}')
 	mean = 0
-	while (k < count):
+	for k in range(count):
 		mean = mean + (float(times_list[k].strip()) / count)
-		k = k + 1
 	mean = '%.2f' % (mean)
-	meantotal.config(text='Total Mean: ' + mean)
+	meantotal.config(text=f'Total Mean: {mean}')
 	root.update()
 	# Sets focus on start button so it can be run through space-bar
 	start.focus_set()

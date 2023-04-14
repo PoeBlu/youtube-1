@@ -6,10 +6,7 @@ class Rook(Piece):
         Piece.__init__(self, color, type)
 
     def __str__(self):
-        if(self.color == "W"):
-            return "R"
-        else:
-            return "r"
+        return "R" if (self.color == "W") else "r"
 
     def scan(self):
         availMoves = []
@@ -21,7 +18,7 @@ class Rook(Piece):
         colCount = self.col
 
         # scan above
-        while rowCount - 1 > -1 and running:
+        while rowCount > 0 and running:
             rowCount -= 1
             if (board.Grid(rowCount, self.col).piece.color != self.color):
                 board.Grid(rowCount, self.col).des = True
@@ -43,7 +40,7 @@ class Rook(Piece):
         rowCount = self.row
         running = True
         pieceFound = False
-        while rowCount + 1 < 8 and running:
+        while rowCount < 7 and running:
             rowCount += 1
             if (board.Grid(rowCount, self.col).piece.color != self.color):
                 board.Grid(rowCount, self.col).des = True
@@ -62,7 +59,7 @@ class Rook(Piece):
         # scan right
         running = True
         pieceFound = False
-        while colCount + 1 < 8 and running:
+        while colCount < 7 and running:
             colCount += 1
 
             if (board.Grid(self.row, colCount).piece.color != self.color):
@@ -83,7 +80,7 @@ class Rook(Piece):
         colCount = self.col
         running = True
         pieceFound = False
-        while colCount - 1 > -1 and running:
+        while colCount > 0 and running:
             colCount -= 1
 
             if (board.Grid(self.row, colCount).piece.color != self.color):

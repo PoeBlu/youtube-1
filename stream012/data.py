@@ -3,7 +3,7 @@ import csv
 with open('data.csv') as f:
     #rows = csv.reader(f)
     rows = csv.DictReader(f)
-    rows = [row for row in rows]
+    rows = list(rows)
 
 #print(rows)
 

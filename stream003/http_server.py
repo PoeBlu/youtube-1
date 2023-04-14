@@ -8,9 +8,7 @@ def handle(connection, client_address):
 	content = ''
 
 	while True:
-		data = connection.recv(1)
-
-		if data:
+		if data := connection.recv(1):
 			content += data.decode()
 		else:
 			break;
@@ -38,7 +36,7 @@ def handle(connection, client_address):
 
 	# handle python
 	if path.endswith('.py'):
-		body = os.popen('python3 %s' % filename).read()
+		body = os.popen(f'python3 {filename}').read()
 
 	if body == '':
 		body = '404'

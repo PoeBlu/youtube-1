@@ -11,7 +11,7 @@ for contact in contacts:
     if 'FN' in contact:
         name = contact.split(':')[-1]
     if contact == 'END:VCARD':
-        names.append('{},{}'.format(name, email))
+        names.append(f'{name},{email}')
 
 for name in names:
     print(name)

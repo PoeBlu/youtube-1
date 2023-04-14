@@ -12,10 +12,10 @@ repos = [
 
 results = []
 
+last_commit = 'None'
+
 for repo in repos:
     commits = requests.get(f'https://api.github.com/repos/{repo}/commits').json()
-
-    last_commit = 'None'
 
     commit = commits[0]
 
@@ -32,4 +32,4 @@ for repo in repos:
 print('repos last updated:')
 
 for result in results:
-    print('{}: {} ({} days ago)'.format(result['repo'], result['last'], result['since']))
+    print(f"{result['repo']}: {result['last']} ({result['since']} days ago)")

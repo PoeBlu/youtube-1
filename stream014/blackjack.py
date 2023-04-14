@@ -8,17 +8,9 @@ def calc_hand(hand):
     sum = 0
 
     for card in non_aces:
-        if card in 'JQK':
-            sum += 10
-        else:
-            sum += int(card)
-
-    for card in aces:
-        if sum <= 10:
-            sum += 11
-        else:
-            sum += 1
-
+        sum += 10 if card in 'JQK' else int(card)
+    for _ in aces:
+        sum += 11 if sum <= 10 else 1
     return sum
 
 while True:
@@ -31,11 +23,9 @@ while True:
 
     random.shuffle(cards)
 
-    dealer = []
-    player = []
+    player = [cards.pop()]
 
-    player.append(cards.pop())
-    dealer.append(cards.pop())
+    dealer = [cards.pop()]
     player.append(cards.pop())
     dealer.append(cards.pop())
 
@@ -49,11 +39,11 @@ while True:
         dealer_score = calc_hand(dealer)
 
         if standing:
-            print('Dealer Cards: [{}] ({})'.format(']['.join(dealer), dealer_score))
+            print(f"Dealer Cards: [{']['.join(dealer)}] ({dealer_score})")
         else:
-            print('Dealer Cards: [{}][?]'.format(dealer[0]))
+            print(f'Dealer Cards: [{dealer[0]}][?]')
 
-        print('Your Cards:   [{}] ({})'.format(']['.join(player), player_score))
+        print(f"Your Cards:   [{']['.join(player)}] ({player_score})")
         print('')
 
         if standing:

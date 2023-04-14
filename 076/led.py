@@ -7,7 +7,7 @@ GPIO.setwarnings(False)
 GPIO.setup(18, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-for i in range(5):
+for _ in range(5):
     GPIO.output(18, GPIO.HIGH)
     time.sleep(.1)
     GPIO.output(18, GPIO.LOW)

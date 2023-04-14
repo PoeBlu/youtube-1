@@ -6,10 +6,7 @@ class Queen(Piece):
         Piece.__init__(self, color, type)
 
     def __str__(self):
-        if(self.color == "W"):
-            return "Q"
-        else:
-            return "q"
+        return "Q" if (self.color == "W") else "q"
 
     def scan(self):
         # rook code
@@ -22,7 +19,7 @@ class Queen(Piece):
         colCount = self.col
 
         # scan above
-        while rowCount - 1 > -1 and running:
+        while rowCount > 0 and running:
             rowCount -= 1
             if (board.Grid(rowCount, self.col).piece.color != self.color):
                 board.Grid(rowCount, self.col).des = True
@@ -44,7 +41,7 @@ class Queen(Piece):
         rowCount = self.row
         running = True
         pieceFound = False
-        while rowCount + 1 < 8 and running:
+        while rowCount < 7 and running:
             rowCount += 1
             if (board.Grid(rowCount, self.col).piece.color != self.color):
                 board.Grid(rowCount, self.col).des = True
@@ -63,7 +60,7 @@ class Queen(Piece):
         # scan right
         running = True
         pieceFound = False
-        while colCount + 1 < 8 and running:
+        while colCount < 7 and running:
             colCount += 1
 
             if (board.Grid(self.row, colCount).piece.color != self.color):
@@ -84,7 +81,7 @@ class Queen(Piece):
         colCount = self.col
         running = True
         pieceFound = False
-        while colCount - 1 > -1 and running:
+        while colCount > 0 and running:
             colCount -= 1
 
             if (board.Grid(self.row, colCount).piece.color != self.color):
@@ -116,7 +113,7 @@ class Queen(Piece):
         if self.row > 0:
             if self.col > 0:
                 # scan up and left
-                while (rowCount - 1 > -1 or colCount - 1 > -1) and running and not edgeFound:
+                while (rowCount > 0 or colCount > 0) and running and not edgeFound:
                     rowCount -= 1
                     colCount -= 1
                     if colCount == -1 or rowCount == -1:
@@ -149,7 +146,7 @@ class Queen(Piece):
 
             if self.col < 7:
                 # scan up and right
-                while (rowCount - 1 > -1 or colCount + 1 < 8) and running and not edgeFound:
+                while (rowCount > 0 or colCount < 7) and running and not edgeFound:
                     rowCount -= 1
                     colCount += 1
                     if colCount == 7 or rowCount == 0:
@@ -183,7 +180,7 @@ class Queen(Piece):
 
             # scan down and left
             if self.col > 0:
-                while (rowCount + 1 < 8 or colCount - 1 > -1) and running and not edgeFound:
+                while (rowCount < 7 or colCount > 0) and running and not edgeFound:
                     rowCount += 1
                     colCount -= 1
                     if colCount == -1 or rowCount == 8:
@@ -215,7 +212,7 @@ class Queen(Piece):
 
             # scan down and right
             if self.col < 7:
-                while (rowCount + 1 < 8 or colCount + 1 < 8) and running and not edgeFound:
+                while (rowCount < 7 or colCount < 7) and running and not edgeFound:
                     rowCount += 1
                     colCount += 1
                     if colCount == 8 or rowCount == 8:

@@ -7,7 +7,9 @@ import sys
 KEY = b'akKJ6779n9*N76*65764876Ngyusdgfh86%(t98'
 
 # create a list of all the characters in base64 w/ padding
-b64_chars = [c for c in 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=']
+b64_chars = list(
+	'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
+)
 
 def convert(string, type):
 	# take a sha512 hash of the key
@@ -25,15 +27,10 @@ def convert(string, type):
 		cipher.insert(0, cipher.pop(int(pos)-1))
 		cipher = cipher[::-1]
 
-	sbox = {}
-
-	# create the mapping between base64 characters and the rearranged base64 characters
-	for i, c in enumerate(b64_chars):
-		sbox[c] = cipher[i]
-
+	sbox = {c: cipher[i] for i, c in enumerate(b64_chars)}
 	# if this operation is a decryption, keys/values must be reverse
 	if type == 'd':
-		   sbox = dict((v, k) for k, v in sbox.items())
+		sbox = {v: k for k, v in sbox.items()}
 
 	# substitute characters in the string according to the sbox
 	for i, c in enumerate(string):
@@ -43,12 +40,12 @@ def convert(string, type):
 
 def encrypt(string):
 	# base64 encode plaintext and convert to list of characters
-	string = [c for c in base64.b64encode(string.encode()).decode()]
+	string = list(base64.b64encode(string.encode()).decode())
 
 	return convert(string, 'e')
 
 def decrypt(string):
-	string = [c for c in string.strip()]
+	string = list(string.strip())
 
 	return base64.b64decode(convert(string, 'd')).decode()
 

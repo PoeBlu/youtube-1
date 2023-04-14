@@ -1,7 +1,7 @@
 inputs = open('inputs.txt').read().strip().split('\n')
 
 # puzzle 1
-print(sum([int(i) for i in inputs]))
+print(sum(int(i) for i in inputs))
 
 # puzzle 2
 seen = set()
